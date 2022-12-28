@@ -93,7 +93,7 @@ Stops execution within the loop and exits the loop.
 **Continue**
 Stops executing the current loop and continues from the start of the loop.
 
-```
+```python3
 while True:
     print('Who are you?')
     name = input()
@@ -110,7 +110,7 @@ Example above: while True is an infinite loop that only exits upon Joe entering 
 
 Note: `0, 0.0,` and `''` will evaluate to `False`, while other values are considered True
 
-```
+```python3
 name = ''
 while not name:
     print('Enter name:')
@@ -142,7 +142,6 @@ The third argument `for i in range(0,10,2)` will indicate the amount that the va
 Python comes with a set of modules called the *standard library*. Each module is a python program that contains a related group of functions that can be imbeded in your program.
 `import [moduleName], [moduleName2]`
 Example: `import random, sys, os, math`
-
 *Dont save python scripts with a name used by a python module*
 
 **`from` `import` statements**
@@ -155,7 +154,7 @@ Using the full name makes for more readable code.
 Programs always terminate if the program execution reaches the bottom of the instructions. `sys.exit()` will allow program termination before the last instruction. `exit()` is in the `sys` module, so it has to be imported.
 Example
 
-```
+```python3
 import sys
 
 while True:
@@ -168,7 +167,7 @@ while True:
 
 ### Summary Example Program: Rock, Paper, Scissors
 
-```
+```python3
 import random, sys
 
 print('ROCK, PAPER, SCISSORS')
@@ -241,7 +240,7 @@ while True: # The main game loop. Infinite loop.
 
 Function is like a mini program within a program
 
-```
+```python3
 def hello():
     print('Howdy!')
     print('Hi')
@@ -261,7 +260,7 @@ Functions are necessary whenever you find yourself copy+paste code in multiple s
 
 Functions can be passed values.
 
-```
+```python3
 def hello(name):
     print('Hello, ' + name)
 
@@ -271,7 +270,7 @@ hello('Bob')
 
 Output will be:
 
-```
+```python3
 Hello, Alice
 Hello, Bob
 ```
@@ -286,6 +285,7 @@ The value stored in parameters are forgotten when the function returns. Adding `
 **Argument**: The actual value being *passed* to a function is the *argument*. Variables that have arguments assigned to them are parameters.
 
 ### `None` Value Type
+
 `None` (capital 'N' required) represents the absence of a value. It is the only value of the `NoneType` DataType. In other languages: `null` `nil` or `undefined`.
 The `None` value-without-a-value is helpful when needing to store something that won't be confused for a real value in a variable. `None` is the return value of `print()`.
 Python will add `return None` to the end of any function definition with no `return` statement or if `return` is used without a value. Similar how `while` or `for` loops end with a `continue` statement.
@@ -295,41 +295,41 @@ Python will add `return None` to the end of any function definition with no `ret
 *Keyword arguments* are identified by the keyword put fefore them in the function call. They are often *optional parameters*
 Example: `print()` function has optional parameters `end` (what should be printed at the end of its arguments) and `sep` (printed between arguments).
 
-```
+```python3
 print('Hello')
 print('World')
 ```
 
 outputs:
 
-```
+```python3
 Hello
 World
 ```
 
 But using the `end` optional parameter allows
 
-```
+```python3
 print('Hello', end='')
 print('World')
 ```
 
 outputs:
 
-```
+```python3
 HelloWorld
 ```
 
 When passing multiple string values, the default is to separate with spaces, but you can change to commas like so:
 
-```
+```python3
 >>> print('cats', 'dogs', 'mice')
 cats dogs mice
 ```
 
 vs using the `sep` keyword argument:
 
-```
+```python3
 >>> print('cats', 'dogs', 'mice', sep=',')
 cats,dogs,mice
 ```
@@ -362,7 +362,7 @@ It is best practice to use separate variable names in different scopes even if i
 
 To tell a function to use the global instance of a variable vs creating a local instance of that variable, use
 
-```
+```python3
 def spam():
     global eggs
     eggs = 'spam'
@@ -377,7 +377,7 @@ Eggs is set to `global value set` in the global scope, but then the `spam()` fun
 A variable with either always be local or global. A function cannot create a local instance of the variable and then later use the global instance.
 A global variable cannot just be used in a function without defining it with the global statement. If you try it will error:
 
-```
+```python3
 def spam():
        print(eggs) # ERROR!
     ➊ eggs = 'spam local'
@@ -388,7 +388,7 @@ def spam():
 
 This program will error as:
 
-```
+```python3
 Traceback (most recent call last):
   File "C:/sameNameError.py", line 6, in <module>
     spam()
@@ -425,7 +425,7 @@ Values inside the list are also called *items*
 Also `['cat', 'bat', 'rat', 'elephant'][3]` would be 'elephant'
 **Lists can include other lists** as in a list of lists:
 
-```
+```python3
 >>> spam = [['cat', 'bat'], [10, 20, 30, 40, 50]]
 >>> spam[0]
 ['cat', 'bat']
@@ -450,7 +450,7 @@ Leaving out an integer will indicate the start or end. `[:3]` is start of list a
 
 `len()` will return the number of values that are in a list value passed to it, just as it can count number of characters in a string value.
 
-```
+```python3
 >>> spam = ['cat', 'dog', 'moose']
 >>> len(spam)
 3
@@ -458,7 +458,7 @@ Leaving out an integer will indicate the start or end. `[:3]` is start of list a
 
 ### Changing Values in a List with Indexes
 
-```
+```python3
 >>> spam = ['cat', 'bat', 'rat', 'elephant']
 >>> spam[1] = 'aardvark'
 >>> spam
@@ -476,7 +476,7 @@ Leaving out an integer will indicate the start or end. `[:3]` is start of list a
 List concatenation and replication operates just like strings.
 `+` operator combines 2 lists. `*` will replicate a list
 
-```
+```python3
 >>> [1, 2, 3] + ['A', 'B', 'C']
 [1, 2, 3, 'A', 'B', 'C']
 >>> ['X', 'Y', 'Z'] * 3
@@ -491,7 +491,7 @@ List concatenation and replication operates just like strings.
 
 `del` statement will delete values at an index in a list. Other values in the list will be moved up one index.
 
-```
+```python3
 >>> spam = ['cat', 'bat', 'rat', 'elephant']
 >>> del spam[2]
 >>> spam
@@ -507,14 +507,14 @@ When using variables that could be grouped together, consider using a list to st
 
 ### `for` loops with Lists
 
-```
+```python3
 for i in range(4):
     print(i)
 ```
 
 output:
 
-```
+```python3
 0
 1
 2
@@ -523,7 +523,7 @@ output:
 
 Python considers `range(4)` return value similar to `[0, 1, 2, 3]`. The following has the same output:
 
-```
+```python3
 for i in [0, 1, 2, 3]:
     print(i)
 ```
@@ -531,7 +531,7 @@ for i in [0, 1, 2, 3]:
 Common List iteration technique: `for range(len(someList)):` to iterate over the indexes of a list.
 Interactive shell example:
 
-```
+```python3
 >>> supplies = ['pens', 'staplers', 'flamethrowers', 'binders']
 >>> for i in range(len(supplies)):
 ...     print('Index ' + str(i) + ' in supplies is: ' + supplies[i])
@@ -548,7 +548,7 @@ Using range(len(supplies)) is in example `for` loop is handy because the code in
 
 `in` and `not in` are boolean values to determine is values are in a list.
 
-```
+```python3
 >>> 'howdy' in ['hello', 'hi', 'howdy', 'heyas']
 True
 >>> spam = ['hello', 'hi', 'howdy', 'heyas']
@@ -564,7 +564,7 @@ True
 
 *tuple unpacking* is a shortcut to assign multiple variables with the values in a list in one line.
 
-```
+```python3
 projects = ['planning stage', 'in progress', 'complete']
 new_project = projects[0]
 current_project = projects[1]
@@ -573,7 +573,7 @@ old_project = projects[2]
 
 The assignments above can be completed using `tuple unpacking`
 
-```
+```python3
 new_project, current_project, old_project = projects
 ```
 
@@ -586,7 +586,7 @@ On each iteration of a `loop`, `enumerate()` will return
 [1] The index of the item in the list
 [2] The item in the list itself
 
-```
+```python3
 >>> supplies = ['pens', 'staplers', 'flamethrowers', 'binders']
 ... for index, item in enumerate(supplies):
 ...     print('Index ' + str(index) + ' in supplies is: ' + item)
@@ -619,7 +619,7 @@ Each data type has its own set of methods. The *list* data type has several meth
 A value can be passed to a list and if the value matches, the index of that value will be returned.
 Example:
 
-```
+```python3
 >>> spam = ['hello', 'hi', 'howdy', 'heyas']
 >>> spam.index('hello')
 0
@@ -638,7 +638,7 @@ ValueError: 'howdy howdy howdy' is not in list
 
 `append` adds to the end of the list
 
-```
+```python3
 >>> spam = ['cat', 'dog', 'bat']
 >>> spam.append('moose')
 >>> spam
@@ -647,7 +647,7 @@ ValueError: 'howdy howdy howdy' is not in list
 
 `insert()` receives the index location and the value to add to the list
 
-```
+```python3
 >>> spam = ['cat', 'dog', 'bat']
 >>> spam.insert(1, 'chicken')
 >>> spam
@@ -662,7 +662,7 @@ Methods belong to a single data type. So `append()` and `insert()` are list meth
 
 `remove()` method is passed the value to be removed from the list it is called on.
 
-```
+```python3
 >>> spam = ['cat', 'bat', 'rat', 'elephant']
 >>> spam.remove('bat')
 >>> spam
@@ -673,7 +673,7 @@ Methods belong to a single data type. So `append()` and `insert()` are list meth
 
 `del` keyword deletes all the elements in range starting from the index 'a' till 'b'. `del[a:b]`
 
-```
+```python3
 mylist = list(range(10))
 print('list is: ', mylist)
 del mylist[3:5]
@@ -682,7 +682,7 @@ print('list after delete is: ',mylist)
 
 will remove elements from index 3 up to but not including 5.
 
-```
+```python3
 list is:  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 list after delete is:  [0, 1, 2, 5, 6, 7, 8, 9]
 ```
@@ -693,7 +693,7 @@ If you know the index of the element, it is good to use the keyword `del`. Use `
 
 Sort numberical or alphabetical order.
 
-```
+```python3
 >>> spam = [2, 5, 3.14, 1, -7]
 >>> spam.sort()
 >>> spam
@@ -706,7 +706,7 @@ Sort numberical or alphabetical order.
 
 Keyword `reverse` can sort values in reverse order.
 
-```
+```python3
 >>> spam.sort(reverse=True)
 >>> spam
 ['elephants', 'dogs', 'cats', 'badgers', 'ants']
@@ -717,7 +717,7 @@ Keyword `reverse` can sort values in reverse order.
 [2] number values and string values cannot be sorted together
 [3] `sort()` uses "ASCIIbetical order" rather than actual alphabetical order. Uppercase comes before lowercase (i.e., 'a' comes after 'Z')
 
-```
+```python3
 >>> spam = ['Alice', 'ants', 'Bob', 'badgers', 'Carol', 'cats']
 >>> spam.sort()
 >>> spam
@@ -726,7 +726,7 @@ Keyword `reverse` can sort values in reverse order.
 
 Sorting values in regular alphabetical order, pass `str.lower` for the `key` keyword argument in the `sort()` method call:
 
-```
+```python3
  >>> spam = ['a', 'z', 'A', 'Z']
 >>> spam.sort(key=str.lower)
 >>> spam
@@ -739,7 +739,7 @@ Above, `str.lower` causes the `sort()` function to treat all items in the list a
 
 Quickly reversing the order of the items in a list, you can call the `reverse()` list method.
 
-```
+```python3
 >>> spam = ['cat', 'dog', 'moose']
 >>> spam.reverse()
 >>> spam
@@ -752,7 +752,7 @@ Quickly reversing the order of the items in a list, you can call the `reverse()`
 
 Python knows that a list is not finished until it sees the ending square bracket.
 
-```
+```python3
 spam = ['apples',
     'oranges',
                     'bananas',
@@ -762,14 +762,14 @@ print(spam)
 
 A single instruction accross multiple lies can be done using the \ line continuation character
 
-```
+```python3
 print('Four score and seven ' + \
       'years ago...')
 ```
 
 ### Example Program: Magic 8 Ball with a List
 
-```
+```python3
 import random
 
 messages = ['It is certain',
@@ -794,7 +794,7 @@ Lists are only 1 version of sequenced values. Strings can be considered a list o
 Python sequence data types include lists, strings, range objects returned by `range()`, and tuples. Many of the things you do with lists can also be done with strings and other values of sequence types: indexing; slicing; and using them with `for` loops, with `len()`, and with the `in` and `not in` operators.
 String Example:
 
-```
+```python3
 >>> name = 'Zophie'
 >>> name[0]
 'Z'
@@ -825,7 +825,7 @@ Lists and Strings are different in that a list is *mutable* data type: it can ha
 A string is *immutable*: it cannot be changed.
 *Mutable* strings need to be changed by building a new string by copying the parts of the old string.
 
-```
+```python3
 >>> name = 'Zophie a cat'
 >>> newName = name[0:7] + 'the' + name[8:12]
 >>> name
@@ -837,7 +837,7 @@ A string is *immutable*: it cannot be changed.
 Lists can be either changed or overwritten since lists are mutable.
 List Example where an entirely new and different list value is overwriting the old list value:
 
-```
+```python3
 >>> eggs = [1, 2, 3]
 >>> eggs = [4, 5, 6]
 >>> eggs
@@ -846,7 +846,7 @@ List Example where an entirely new and different list value is overwriting the o
 
 To modify the original list, would have to do:
 
-```
+```python3
 >>> eggs = [1, 2, 3]
 >>> del eggs[2]
 >>> del eggs[1]
@@ -867,7 +867,7 @@ A tuple is identical to the list data type, except in 2 ways.
 [2] tuples cannot have their valued modified, appended, or removed.
 If only one value in a tuple, put a comma after the 1st value:
 
-```
+```python3
 >>> type(('hello',))
 <class 'tuple'>
 >>> type(('hello'))
@@ -881,7 +881,7 @@ Tuples are used to convey in code that you don't intend for that sequence of val
 
 Just like str(42) will return the string representation of the integer 42, the functions list() and tuple() will reurn the list and tuple versions of the values passed to them.
 
-```
+```python3
 >>> tuple(['cat', 'dog', 5])
 ('cat', 'dog', 5)
 >>> list(('cat', 'dog', 5))
@@ -895,7 +895,7 @@ Just like str(42) will return the string representation of the integer 42, the f
 **Strings and Integer References**
 Variables "store" strings and integer values... But Python is actually using variables to store references to the computer memory locations where the values are stored.
 
-```
+```python3
 >>> spam = 42
 >>> cheese = spam
 >>> spam = 100
@@ -911,7 +911,7 @@ Changing variables for strings and integers are not changing values in memory, b
 **List References**
 Lists don't work this way because list values can change (i.e., lists are mutable).
 
-```
+```python3
 ➊ >>> spam = [0, 1, 2, 3, 4, 5]
 ➋ >>> cheese = spam # The reference is being copied, not the list.
 ➌ >>> cheese[1] = 'Hello!' # This changes the list value.
@@ -933,7 +933,7 @@ Python technically contain references to values, people often casually say that 
 
 `id()` will return the unique identity of each Python value stored in memory.
 
-```
+```python3
 >>> id('Howdy') # The returned number will be different on your machine.
 44491136
 ```
@@ -942,7 +942,7 @@ Python picks address based on which memory bytes happen to be free on your compu
 
 Immutable strings `id()`
 
-```
+```python3
 >>> bacon = 'Hello'
 >>> id(bacon)
 44491136
@@ -953,7 +953,7 @@ Immutable strings `id()`
 
 Mutable lists `id()`
 
-```
+```python3
 >>> eggs = ['cat', 'dog'] # This creates a new list.
 >>> id(eggs)
 35152584
@@ -980,7 +980,7 @@ To keep a function from modifying the list or dictionary that is passed, use the
 - `copy.copy()` to make a duplicate copy of a mutable value like a list or dictionary, not just a copy of a reference.
 - `copy.deepcopy()` is used when the list you need to copy contains lists. `deepcopy()` will copy the inner lists as well.
 
-```
+```python3
 >>> import copy
 >>> spam = ['A', 'B', 'C', 'D']
 >>> id(spam)
@@ -1003,7 +1003,7 @@ spam = ['apples', 'bananas', 'tofu', 'cats']
 
 Write a function that takes a list value as an argument and returns a string with all the items separated by a comma and a space, with and inserted before the last item. For example, passing the previous spam list to the function would return 'apples, bananas, tofu, and cats'. But your function should be able to work with any list value passed to it. Be sure to test the case where an empty list [] is passed to your function.
 
-```
+```python3
 spam = ['apples', 'bananas', 'tofu', 'cats']
 
 def list_to_string(spam_s):
@@ -1027,7 +1027,7 @@ For this exercise, we’ll try doing an experiment. If you flip a coin 100 times
 Write a program to find out how often a streak of six heads or a streak of six tails comes up in a randomly generated list of heads and tails. Your program breaks up the experiment into two parts: the first part generates a list of randomly selected 'heads' and 'tails' values, and the second part checks if there is a streak in it. Put all of this code in a loop that repeats the experiment 10,000 times so we can find out what percentage of the coin flips contains a streak of six heads or tails in a row. As a hint, the function call random.randint(0, 1) will return a 0 value 50% of the time and a 1 value the other 50% of the time.
 You can start with the following template:
 
-```
+```python3
 import random
 numberOfStreaks = 0
 for experimentNumber in range(10000):
@@ -1039,7 +1039,7 @@ print('Chance of streak: %s%%' % (numberOfStreaks / 100))
 
 Of course, this is only an estimate, but 10,000 is a decent sample size. Some knowledge of mathematics could give you the exact answer and save you the trouble of writing a program, but programmers are notoriously bad at math.
 
-```
+```python3
 # My first try
 
 import random
@@ -1071,7 +1071,7 @@ print('Chance of streak: %s%%' % (numberOfStreaks / 100))
 end = input('end of program ...')
 ```
 
-```
+```python3
 # example from stackoverflow
 numberOfStreaks = 0
 CoinFlip = []
@@ -1110,7 +1110,7 @@ Dictionaries use braces, `{}`
 `>>> myCat = {'size': 'fat', 'color': 'gray', 'disposition': 'loud'}`
 You access the values through their keys:
 
-```
+```python3
 >>> myCat['size']
 'fat'
 >>> 'My cat has ' + myCat['color'] + ' fur.'
@@ -1123,7 +1123,7 @@ You access the values through their keys:
 Dictionaries are unordered
 List order mattered in comparisons, but dictionaries do not.
 
-```
+```python3
 >>> spam = ['cats', 'dogs', 'moose']
 >>> bacon = ['dogs', 'moose', 'cats']
 >>> spam == bacon
@@ -1136,7 +1136,7 @@ True
 
 Even if dictionaries are unordered, argitrary values for keys allows the organization of data be very flexible. Example program to store friends' birthdays:
 
-```
+```python3
 ➊ birthdays = {'Alice': 'Apr 1', 'Bob': 'Dec 12', 'Carol': 'Mar 4'}
 
    while True:
@@ -1160,7 +1160,7 @@ Even if dictionaries are unordered, argitrary values for keys allows the organiz
 3 dictionary methods return list-like values of the dictionary's keys, values, or both keys and values. Return values are not true lists: they cannot be modified and do not have an `append()` method.
 But data types `dict_keys`, `dict_values`, and `dict_items` *can* be used in `for` loops.
 
-```
+```python3
 >>> spam = {'color': 'red', 'age': 42}
 >>> for v in spam.values():
 ...     print(v)
@@ -1171,7 +1171,7 @@ red
 
 `for` loop iterated over each value in the `spam` dictionary. A `for` loop can also iterate over the keys or both keys and values (`dict_items` value returned by the `items()` method are tuples of the key and value):
 
-```
+```python3
 >>> for k in spam.keys():
 ...     print(k)
 
@@ -1186,7 +1186,7 @@ age
 
 **IF a true list is needed**, pass its list-like return value to the `list()` function.
 
-```
+```python3
 >>> spam = {'color': 'red', 'age': 42}
 >>> spam.keys()
 dict_keys(['color', 'age'])
@@ -1196,9 +1196,9 @@ dict_keys(['color', 'age'])
 
 `list(spam.keys())` lines takes the `dict_keys` value returned from `keys()` and passes it to `list()`, which then returns a list value of `['color','age']`.
 
-**for Key, Value in Dictionary**
+### for Key, Value in Dictionary
 
-```
+```python3
 >>> spam = {'color': 'red', 'age': 42}
 >>> for k, v in spam.items():
 ...     print('Key: ' + k + ' Value: ' + str(v))
@@ -1212,7 +1212,7 @@ Key: color Value: red
 `in` and `not in` can check whether a value exists in a dictionary just like in lists.
 Returns Boolean.
 
-```
+```python3
 >>> spam = {'name': 'Zophie', 'age': 7}
 >>> 'name' in spam.keys()
 True
@@ -1232,7 +1232,7 @@ Shorthand for `'color' in spam.keys()` is `'color' in spam`
 
 Checking whether a key exists in a dictionary before accessing the key's value is tedious. `get()` method allows a fallback value to be returned if the key does not exist.
 
-```
+```python3
 >>> picnicItems = {'apples': 5, 'cups': 2}
 >>> 'I am bringing ' + str(picnicItems.get('cups', 0)) + ' cups.'
 'I am bringing 2 cups.'
@@ -1242,7 +1242,7 @@ Checking whether a key exists in a dictionary before accessing the key's value i
 
 `get()` will subvert error messages such as:
 
-```
+```python3
 >>> picnicItems = {'apples': 5, 'cups': 2}
 >>> 'I am bringing ' + str(picnicItems['eggs']) + ' eggs.'
 Traceback (most recent call last):
@@ -1256,7 +1256,7 @@ KeyError: 'eggs'
 If a key dues not have a value `setdefault()` will allow this functionality in 1 line of code
 Instead of :
 
-```
+```python3
 spam = {'name': 'Pooka', 'age': 5}
 if 'color' not in spam:
     spam['color'] = 'black'
@@ -1264,7 +1264,7 @@ if 'color' not in spam:
 
 The 1st argument passed to the method is the key to check for, and the secuond argument is the value to set at that key if the key does not exist.
 
-```
+```python3
 >>> spam = {'name': 'Pooka', 'age': 5}
 >>> spam.setdefault('color', 'black')
 'black'
@@ -1278,7 +1278,7 @@ The 1st argument passed to the method is the key to check for, and the secuond a
 
 `setdefault()` can be used to count the number of occurrences of each letter in a string.
 
-```
+```python3
 message = 'It was a bright cold day in April, and the clocks were striking
 thirteen.'
 count = {}
@@ -1294,7 +1294,7 @@ print(count)
 
 Import the module `pprint` into your programs, you'll have access to the `pprint()` and `pformat()` funtions. This is helpful when dictionaries contain nested lists or dictionaries.
 
-```
+```python3
 import pprint
 message = 'It was a bright cold day in April, and the clocks were striking
 thirteen.'
@@ -1309,7 +1309,7 @@ pprint.pprint(count)
 
 `pformat()` will obtain the prettified text as a string value instead of displaying it on the screen
 
-```
+```python3
 pprint.pprint(someDictionaryValue)
 print(pprint.pformat(someDictionaryValue))
 ```
@@ -1318,7 +1318,7 @@ Those 2 lines are equivalent.
 
 ### Nested Dictionaries and Lists
 
-```
+```python3
 allGuests = {'Alice': {'apples': 5, 'pretzels': 12},
              'Bob': {'ham sandwiches': 3, 'apples': 2},
              'Carol': {'cups': 3, 'apple pies': 1}}
@@ -1340,7 +1340,7 @@ print(' - Apple Pies     ' + str(totalBrought(allGuests, 'apple pies')))
 You can view the execution of this program at <https://autbor.com/guestpicnic/>. Inside the totalBrought() function, the for loop iterates over the key-value pairs in guests ➊. Inside the loop, the string of the guest’s name is assigned to k, and the dictionary of picnic items they’re bringing is assigned to v. If the item parameter exists as a key in this dictionary, its value (the quantity) is added to numBrought ➋. If it does not exist as a key, the get() method returns 0 to be added to numBrought.
 Output:
 
-```
+```python3
  Number of things being brought:
  - Apples 7
  - Cups 3
@@ -1358,7 +1358,7 @@ Working with Strings lets you write, print, and access strings in your code.
 Use single quote `' '`
 Using a quote within a string requires double and single quotes.
 
-```
+```python3
 >>> spam = "That is Alice's cat."
 ```
 
@@ -1377,13 +1377,13 @@ Backslash = `\\`
 
 Place `r` before the beginning quotation mark of a string to ignore all escape characters:
 
-```
+```python3
 >>> print(r'The is \n Carol\'s cat.')
 ```
 
 will output:
 
-```
+```python3
 That is \n Carol\'s cat.
 ```
 
@@ -1395,7 +1395,7 @@ Windows file paths or regular expressions are useful to use *raw strings*
 `\n` puts newline into a string, but using multipline strings `''' string '''` (can also use 3 double quotes) allow any quotes, tabs, or newlines in between the "triple quotes" to be part of the string.
 Python's indentation rules for blocks do not apply to lines inside a multiline string.
 
-```
+```python3
  print('''Dear Alice,
 
 Eve's cat has been arrested for catnapping, cat burglary, and extortion.
@@ -1406,7 +1406,7 @@ Bob''')
 
 Ouput:
 
-```
+```python3
 Dear Alice,
 
 Eve's cat has been arrested for catnapping, cat burglary, and extortion.
@@ -1423,7 +1423,7 @@ The following `print()` call produces identical output:
 
 Hash character (#) marks the beginning of a comment for the rest of the line.
 
-```
+```python3
 """This is a test Python program.
 Written by Al Sweigart al@inventwithpython.com
 
@@ -1440,7 +1440,7 @@ def spam():
 
 Strings use indexes and slices same a lists. Strings are a list and each character in the string is an item with a corresponding index.
 
-```
+```python3
 >>> spam = 'Hello, world!'
 >>> spam[0]
 'H'
@@ -1464,7 +1464,7 @@ Slicing dos not modify the original string. Slices can be stored in a separate v
 Evaluates to Boolean `True` or `False`
 Expressions test exact string and is case-sensitive.
 
-```
+```python3
 >>> 'Hello' in 'Hello, World'
 True
 >>> 'Hello' in 'Hello'
@@ -1481,7 +1481,7 @@ False
 
 Instead of concatentation:
 
-```
+```python3
 >>> name = 'Al'
 >>> age = 4000
 >>> 'Hello, my name is ' + name + '. I am ' + str(age) + ' years old.'
@@ -1490,7 +1490,7 @@ Instead of concatentation:
 
 Use ***String Interpolation*** where `%s` operator inside strings is a marker replaced by values following the string.
 
-```
+```python3
 >>> name = 'Al'
 >>> age = 4000
 >>> 'My name is %s. I am %s years old.' % (name, age)
@@ -1500,7 +1500,7 @@ Use ***String Interpolation*** where `%s` operator inside strings is a marker re
 `str()` does not have to be called to convert values to strings.
 Python 3.6 introduced ***f-string***, similar to interpolation except braces `{}` are used instead of `%s`.
 
-```
+```python3
 >>> name = 'Al'
 >>> age = 4000
 >>> f'My name is {name}. Next year I will be {age + 1}.'
@@ -1518,7 +1518,7 @@ To alter the original string, call `upper()` or `lower()` on the string and then
 **`isupper()` `islower()`**
 will return `True` value if string has at least one letter and all the letters are uppercase or lowercase, respectively. Otherwise, `false`.
 
-```
+```python3
 >>> spam = 'Hello, world!'
 >>> spam.islower()
 False
@@ -1543,7 +1543,7 @@ False
 - istitle() Returns True if the string consists only of words that begin with an uppercase letter followed by only lowercase letters
 `isX()` is useful when needing to validaete user input.
 
-```
+```python3
 while True:
     print('Enter your age:')
     age = input()
@@ -1563,7 +1563,7 @@ while True:
 **`startswith()`** and **`endswith()`**
 Returns `true` if the string value they are called on begins or ends with the string passed to the method.
 
-```
+```python3
 >>> 'Hello, world!'.startswith('Hello')
 True
 >>> 'Hello, world!'.endswith('world!')
@@ -1582,7 +1582,7 @@ True
 `join()` method joins a list of strings together into a single string value.
 `join()` method called on a string, gets passed a list of strings, and returns a string.
 
-```
+```python3
 >>> ', '.join(['cats', 'rats', 'bats'])
 'cats, rats, bats'
 >>> ' '.join(['My', 'name', 'is', 'Simon'])
@@ -1594,14 +1594,14 @@ True
 `split()` method is called on a string and returns a list of strings.
 Default split character is whitespace (space, tab, or newline characters)
 
-```
+```python3
 >>> 'My name is Simon'.split()
 ['My', 'name', 'is', 'Simon']
 ```
 
 Delimiter strings can be passed to `split()`
 
-```
+```python3
 >>> 'MyABCnameABCisABCSimon'.split('ABC')
 ['My', 'name', 'is', 'Simon']
 >>> 'My name is Simon'.split('m')
@@ -1612,21 +1612,21 @@ Delimiter strings can be passed to `split()`
 `partition()` string method can split a string into the text before and after a separator string. Returns a tuple of 3 substrings.
 Will only find the 1st occurance:
 
-```
+```python3
 >>> 'Hello, world!'.partition('o')
 ('Hell', 'o', ', world!')
 ```
 
 If not found, 1st full string returned, other 2 strings empty:
 
-```
+```python3
 >>> 'Hello, world!'.partition('XYZ')
 ('Hello, world!', '', '')
 ```
 
 Multiple assignment can ssign 3 returned strings to 3 variables:
 
-```
+```python3
 >>> before, sep, after = 'Hello, world!'.partition(' ')
 >>> before
 'Hello,'
@@ -1636,7 +1636,7 @@ Multiple assignment can ssign 3 returned strings to 3 variables:
 
 **`rjust()`, `ljust()`, and `center()`**
 
-```
+```python3
 >>> 'Hello'.rjust(10)
 '     Hello'
 >>> 'Hello'.rjust(20)
@@ -1649,16 +1649,16 @@ Multiple assignment can ssign 3 returned strings to 3 variables:
 
 `center()` is great for section headings in output
 
-```
+```python3
 >>> 'Hello'.center(20)
 '       Hello        '
 >>> 'Hello'.center(20, '=')
 '=======Hello========'
 ```
 
-*Printing Tables Example*
+### Printing Tables Example
 
-```
+```python3
 def printPicnic(itemsDict, leftWidth, rightWidth):
     print('PICNIC ITEMS'.center(leftWidth + rightWidth, '-'))
     for k, v in itemsDict.items():
@@ -1669,7 +1669,7 @@ printPicnic(picnicItems, 12, 5)
 printPicnic(picnicItems, 20, 6)
 ```
 
-```
+```python3
 Output:
 ---PICNIC ITEMS--
 sandwiches..    4
@@ -1686,7 +1686,7 @@ cookies.............  8000
 **`strip()`, `rstrip()`, and `lstrip()`**
 Removes whitespace characters at the beginning or end. l for left, r for right.
 
-```
+```python3
 >>> spam = '    Hello, World    '
 >>> spam.strip()
 'Hello, World'
@@ -1698,7 +1698,7 @@ Removes whitespace characters at the beginning or end. l for left, r for right.
 
 String argument can be passed into `strip()`
 
-```
+```python3
 >>> spam = 'SpamSpamBaconSpamEggsSpamSpam'
 >>> spam.strip('ampS')
 'BaconSpamEggs'
@@ -1713,7 +1713,7 @@ Numeric Values of Characters
 Every text character has a corresponding numeric value in *Unicode code point*
 `ord()` returns the code point of a one-character string. `chr()` functions gets one-character string of an integer code point.
 
-```
+```python3
 >>> ord('A')
 65
 >>> ord('4')
@@ -1726,7 +1726,7 @@ Every text character has a corresponding numeric value in *Unicode code point*
 
 Ordering or mathematical operation on characters:
 
-```
+```python3
 >>> ord('B')
 66
 >>> ord('A') < ord('B')
@@ -1744,7 +1744,7 @@ More on this: Ned Batchelder’s 2012 PyCon talk, [“Pragmatic Unicode, or, How
 `pyperclip` module has `copy()` and `paste()` functions that can send text to and receive text from your computer's clipboard. Sending output of your program to the clipboard will make it east to paste it into an email, word processor, or some other software.
 `pyperclip` module does not come with Python. Install it.
 
-```
+```python3
 >>> import pyperclip
 >>> pyperclip.copy('Hello, world!')
 >>> pyperclip.paste()
@@ -1756,7 +1756,7 @@ More on this: Ned Batchelder’s 2012 PyCon talk, [“Pragmatic Unicode, or, How
 More info in ToC Appendix B of Automate the boringstuff
 MacOS -> create a shell script to run Python scripts by creating a text file with the *.command* file extension. Createa  new file in a text editor and add the following contrnet:
 
-```
+```python3
 #!/usr/bin/env bash
 python3 /path/to/your/pythonScript.py
 ```
@@ -1765,7 +1765,7 @@ Save file with the *.command* file extension in home folder. In terminal window,
 
 Windows -> Create a *batch script* with *.bat* file extension like the shell script in macOS and Linux. To make a batch file:
 
-```
+```python3
 @py.exe C:\path\to\your\pythonScript.py %*
 @pause
 ```
