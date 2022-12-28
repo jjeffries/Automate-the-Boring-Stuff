@@ -6,20 +6,28 @@ TEXT = {'free': """Sounds great. My calendar is up to date. Pick time at your co
         'complete': """Thank you for the opportunity to work with you on this assessment project. As you review report details, reach out with any questions. The reports have been uploaded to \n\nThanks,\n-Josh"""
         }
 
-import sys, pprint, pyperclip
+import sys, pprintpp, pyperclip
+
+if len(sys.argv) > 1:
+    keyphrase = sys.argv[1]
 
 if len(sys.argv) < 2:
+    print('CLIPBOARD SCRIPT'.center(80, '='))
+    print('='.center(80, '='))
     print('Usage: python mclip.py [keyphrase] - copy phrase text')
-    print('KEYPHRASE OPTIONS'.center(25, '='))
-    pprint.pprint(TEXT)
-    sys.exit()
+    keyphrase = 'No Argument Received in sys.argv[1]'
 
-keyphrase = sys.argv[1]
+while True:
+    if keyphrase not in TEXT:
+        print('\n')
+        print('KEYPHRASE OPTIONS'.center(80, '='))
+        pprintpp.pprint(TEXT)
+        print('There was no input text during script call. ' + keyphrase)
+        keyphrase = input('Enter Keyphrase or (e) for exit: ')
+        if keyphrase.lower() == 'e':
+            break
+    if keyphrase in TEXT:
+        pyperclip.copy(TEXT[keyphrase])
+        print('Text for ' + keyphrase + ' copied to clipboard.')
+        break
 
-if keyphrase in TEXT:
-    pyperclip.copy(TEXT[keyphrase])
-    print('Text for ' + keyphrase + ' copied to clipboard.')
-else:
-    print('There is no text for ' + keyphrase)
-    print('KEYPHRASE OPTIONS'.center(25, '='))
-    pprint(TEXT)
