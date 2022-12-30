@@ -1777,7 +1777,248 @@ Recommend to place all batch and .py files in a single folder that already exist
 ### Project: Multi-Clipboard Automatic Messages
 
 Automate responding to large number of emails with similar phrasing. Process is made easier with a program that stores multiple phrases.
-**Step 1: Program Design and Data Structures**
+
 Run program with a command line argument that is a short key phrase - for instance, *agree*, or *busy*.
 
 The message associated with that key phrase will be copied to the clipboard so that the user can paste it into an email.
+
+
+
+```python3
+#! python3
+# mclip.py - A multiclipboard program.
+
+TEXT = {'free': """Sounds great. My calendar is up to date. Pick time at your convenience and send me an invite. \n\nThanks,\n-Josh""",
+        'kickoff': """I look forward to working with you on the assessment next week. Please let me know if you have any questions about the document request or remote access details. On kickoff we will . . .""",
+        'complete': """Thank you for the opportunity to work with you on this assessment project. As you review report details, reach out with any questions. The reports have been uploaded to \n\nThanks,\n-Josh"""
+        }
+
+import sys, pprintpp, pyperclip
+
+if len(sys.argv) > 1:
+    keyphrase = sys.argv[1]
+
+if len(sys.argv) < 2:
+    print('CLIPBOARD SCRIPT'.center(80, '='))
+    print('='.center(80, '='))
+    print('Usage: python mclip.py [keyphrase] - copy phrase text')
+    keyphrase = 'No Argument Received in sys.argv[1]'
+
+while True:
+    if keyphrase not in TEXT:
+        print('\n')
+        print('KEYPHRASE OPTIONS'.center(80, '='))
+        pprintpp.pprint(TEXT)
+        print('There was no input text during script call. ' + keyphrase)
+        keyphrase = input('Enter Keyphrase or (e) for exit: ')
+        if keyphrase.lower() == 'e':
+            break
+    if keyphrase in TEXT:
+        pyperclip.copy(TEXT[keyphrase])
+        print('Text for ' + keyphrase + ' copied to clipboard.')
+        break
+```
+
+## CH7 Pattern Matching with Regular Expressions
+
+This chapter includes:
+
+- Programs to find text patterns without using regular expressions
+- Then adds regular expressions to show their power.
+- Shows String substitution and creating character classes
+
+### Finding Patters of Text Without Regular Expressions
+
+Goal: find american phone number in a string.
+Example: 415-555-4242
+Function: `isPhoneNumber()` checks whether a string matches this pattern
+Returns: `True` or `False`.
+
+```python3
+def isPhoneNumber(text):
+    if len(text) != 12:
+        return False
+    for i in range(0, 3):
+        if not text[i].isdecimal():
+            return False
+    if text[3] != '-':
+        return False
+    for i in range(4, 7):
+        if not text[i].isdecimal():
+            return False
+    if text[7] != '-':
+        return False
+    for i in range(8, 12):
+        if not text[i].isdecimal():
+            return False
+    return True
+```
+
+To find a phone number within a larger string, add more code to find the phone number pattern.
+
+```python3
+message = 'Call me at 415-555-1011 tomorrow. 415-555-9999 is my office.'
+for i in range(len(message)):
+    chunk = message[i:i+12]
+    if isPhoneNumber(chunk):
+        print('Phone number found: ' + chunk)
+    print('Done')
+```
+
+### Finding Patters of Text with Regular Expressions
+
+The above code will fail for other phone number formats such as 415.555.4242 or (415) 555-4242. More code is required for these additional patterns, but using *regexes* is an easier method.
+
+*Regexes* (regular expressions) are descriptions for a pattern of text. Example: \d stands for a digit character(1-9).
+
+The regex \d\d\d-\d\d\d-\d\d\d\d is used by python to match the same text pattern the previous `isPhoneNumber()` function did.
+
+Other sophisticated descriptions are used such as `{3}` for "Match this pattern three times". `isPhoneNumber()` could also be replaced with regex \d{3}-\d{3}-\d{4} to match the phone number.
+
+### Creating Regex Objects
+
+regex functions in Python are in the re module:
+
+```python3
+>>> import re
+```
+
+Passing a regular expression to `re.compile()` returns a Regex pattern object (or simply, a Regex object).
+
+Phone number example again:
+
+```python3
+>>> phoneNumRegex = re.compile(r'\d\d\d-\d\d\d-\d\d\d\d')
+```
+
+Now the phoneNumRegex variable contains a Regex object.
+
+### Matching Regex Objects
+
+Regex object's `search()` method searches the string it is passed for any matches to the regex. `search()` returns `None` if regex pattern is not found in the string.
+
+```python3
+>>> phoneNumRegex = re.compile(r'\d\d\d-\d\d\d-\d\d\d\d')
+>>> mo = phoneNumRegex.search('Mu number is 415-555-4242.')
+>>> print('Phone number found: ' + mo.group())
+Phone number found: 415-555-4242
+```
+
+### Review of Regular Expression Matching
+
+Python steps to using regular expressions:
+
+- Import the regex module with `import re`
+- Create a Regex object with the `re.compile(r'regexPatternString')` function. (Remember to use a raw string.)
+- Pass the string you want to search into the `Regex` object's `search()` method. This returns a `Match` object.
+- Call the `Match` object's `group()` method to return a string of the actual matched text.
+
+Web-based regular expression testers can show exactly how a regex matches a piece of text: [https://pythex.org/](https://pythex.org/)
+
+### More Pattern Matching with Regex
+
+### *Grouping with Parentheses*
+
+Adding parentheses will create *groups* in the regex: `(\d\d\d)-(\d\d\d-\d\d\d\d)`. Then you can use the `group()` match object method to grab the matching text from just one group.
+
+1st set of parentheses in regex string is group 1.
+2nd set of parentheses is regex string is group 2.
+Set the group by passing integer 1 or 2 to the `group()`
+
+```python3
+>>> phoneNumRegex = re.compile(r'(\d\d\d)-(\d\d\d-\d\d\d\d)')
+>>> mo = phoneNumRegex.search('My number is 415-555-4242.')
+>>> mo.group(1)
+'415'
+>>> mo.group(2)
+'555-4242'
+>>> mo.group(0)
+'415-555-4242'
+>>> mo.group()
+'415-555-4242'
+```
+
+Plural `groups()` method will return all the groups at once.
+
+```python3
+>>> mo.groups()
+('415', '555-4242')
+>>> areaCode, mainNumber = mo.groups()
+>>> print(areaCode)
+415
+>>> print(mainNumber)
+555-4242
+```
+
+`mo.groups()` returned a tuple of multiple values, so multiple assignment can be used.
+To match special meaning characters in regex like paranthesis, use escape character `\(`
+
+Regular Expression Special Meaning Characters:
+
+```Text
+.  ^  $  *  +  ?  {  }  [  ]  \  |  (  )
+```
+
+To detect the characters in text patterns, escape them with a backslash:
+
+```Text
+\.  \^  \$  \*  \+  \?  \{  \}  \[  \]  \\  \|  \(  \)
+```
+
+### *Matching Multiple Groups with a Pipe `|`*
+
+`r'Batman|Tina Fey'` will match either `'Batman'` or `'Tina Fey'`
+When both occur in a string, only the first occurance will match.
+
+`all` matching occurrences can be found with `findall()` method.
+
+Matching any string beginning with same pattern: example `'Batman', 'Batmobile', 'Batcopter',` and `'Batbat'`. Specify prefix `bat` only once like:
+
+```python3
+>>> batRegex = re.compile(r'Bat(man|mobile|copter|bat)')
+>>> mo = batRegex.search('Batmobile lost a wheel')
+>>> mo.group()
+'Batmobile'
+>>> mo.group(1)
+'mobile'
+```
+
+`mo.group()` returns the full matched text `'Batmobile'` while `mo.group(1)` returns just the part matched text inside the first parentheses group, `'mobile'`.
+
+### *Optional Matching with `?`*
+
+For patterns that you want to match only optionally. i.e., find the match regardless of whether that bit of text is there.
+
+```python3
+>>> batRegex = re.compile(r'Bat(wo)?man')
+>>> mo1 = batRegex.search('The Adventures of Batman')
+>>> mo1.group()
+'Batman'
+
+>>> mo2 = batRegex.search('The Adventures of Batwoman')
+>>> mo2.group()
+'Batwoman'
+```
+
+The next IP address example doesn't check that the IP address is valid, but it gives the idea of 4 octets with between 1-3 digits.
+
+```python3
+ipAddress = re.compile(r'\d(\d)?(\d)?\.\d(\d)?(\d)?\.\d(\d)?(\d)?\.\d(\d)?(\d)?)
+```
+
+Using earlier phone number example, we can make a regex look for phone numbers that do or do not have an area code.
+
+```python3
+>>> phoneRegex = re.compile(r'(\d\d\d-)?\d\d\d-\d\d\d\d')
+>>> mo1 = phoneRegex.search('My number is 415-555-4242')
+>>> mo1.group()
+'415-555-4242'
+
+>>> mo2 = phoneRegex.search('My number is 555-4242')
+>>> mo2.group()
+'555-4242'
+```
+
+`?` means "Match zero or one of the group preceding this question mark."
+
+### *Matching Zero or More with the Star*
