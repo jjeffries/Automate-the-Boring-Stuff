@@ -41,6 +41,8 @@ Information gained from working with Nick Moore on a Marco project. Set up a vir
 
 ## CH1-2 Python Basics and Flow Control
 
+---
+
 ### Math
 
 | Operator | Operation                         | Example | Evaluates to . . . |
@@ -236,6 +238,8 @@ while True: # The main game loop. Infinite loop.
 
 ## CH3 Python Functions
 
+---
+
 ### A function definition `def`
 
 Function is like a mini program within a program
@@ -407,6 +411,8 @@ Errors and handled with `try` and `except` statements.
 ---
 
 ## CH4 Lists
+
+---
 
 This chapter discusses lists and methods, which are functions tied to values of a certain data type. Lastly the sequence data types (lists, tuples, and strings) are covered and shown how they compare with each other. Next chapter is Dictionaries.
 
@@ -1104,6 +1110,8 @@ stop = input()
 
 ## CH 5 Dictionaries and Structuring Data
 
+---
+
 A *dictionary* is a mutable collection of many values. Unlike indexees for lists, indexes for dictionaries can use many different data types, not just integers.
 **Dictionary Index** = **Keys** and a key with its associated value is called a *key-value pair*.
 Dictionaries use braces, `{}`
@@ -1348,8 +1356,11 @@ Output:
  - Ham Sandwiches 3
  - Apple Pies 1
 ```
+---
 
 ## CH6 Manipulating Strings
+
+---
 
 Working with Strings lets you write, print, and access strings in your code.
 
@@ -1818,8 +1829,11 @@ while True:
         print('Text for ' + keyphrase + ' copied to clipboard.')
         break
 ```
+---
 
 ## CH7 Pattern Matching with Regular Expressions
+
+---
 
 This chapter includes:
 
@@ -2022,3 +2036,1455 @@ Using earlier phone number example, we can make a regex look for phone numbers t
 `?` means "Match zero or one of the group preceding this question mark."
 
 ### *Matching Zero or More with the Star*
+
+`*` called *star* or *asterisk* means "match zero or more" - the group that precedes the star can occcur any number of times in the text. It can be completely absent or repeated over and over again.
+Batman Example:
+
+```python3
+>>> batRegex = re.compile(r'Bat(wo)*man')
+>>> mo1 = batRegex.search('The Adventures of Batman')
+>>> mo1.group()
+'Batman'
+
+>>> mo2 = batRegex.search('The Adventures of Batwoman')
+>>> mo2.group()
+'Batwoman'
+
+>>> mo3 = batRegex.search('The Adventures of Batwowowowoman')
+>>> mo3.group()
+'Batwowowowowoman'
+```
+
+To match an actual *star* prefix the star in the regular expression with a backslash, `\*`
+
+### *Matching One or More with the Plus*
+
+While `*` means "zero or more", `+` means "match one or more"
+`+` requires that the group preceding a plus must occur at least once.
+
+```python3
+>>> batRegex = re.compile(r'Bat(wo)+man')
+>>> mo1 = batRegex.search('The Adventures of Batwoman')
+>>> mo1.group()
+'Batwoman'
+
+>>> mo2 = batRegex.search('The Adventures of Batwowowowoman')
+>>> mo2.group()
+'Batwowowowoman'
+
+>>> mo3 = batRegex.search('The Adventures of Batman')
+>>> mo3 == None
+True
+```
+
+### *Matching Specific Repetitions with Braces*
+
+group to repeat a specific number of times, follow the group in the regex with a number in braces: `(Ha){3}` will match string `'HaHaHa'`.
+
+Specify a Range like: `(Ha){3,8}`
+Range "3 or more": `(Ha){3,}` - leave the last number blank. Similarly leaving out the furst or second number in the braces will specify the minimum or maximum unbounded range. `(Ha){,5}` is "zero to five instances of Ha"
+
+These 2 range regular expressions match identical patterns:
+
+```text
+(Ha){3,5}
+((Ha)(Ha)(Ha))|((Ha)(Ha)(Ha)(Ha))|((Ha)(Ha)(Ha)(Ha)(Ha))
+```
+
+### Greedy and Non-Greedy Matching
+
+Notice range matches return the longest match.
+`(Ha){3,5}` can match three, four, or five instances of Ha... but `Match` object's call to `group()` returns the logest string. 
+
+Python's regular expressions are *greedy* by default, which means that in ambiguous situations they match the longest string possible. The *non-greedy* (lazy) version of the braces, match shortest, has closing brace followed by question mark.
+
+```python3
+>>> greedyHaRegex = re.compile(r'(Ha){3,5}')
+>>> mo1 = greedyHaRegex.search('HaHaHaHaHa')
+>>> mo1.group()
+'HaHaHaHaHa'
+
+>>> nongreedyHaRegex = re.compile(r'(Ha){3,5}?')
+>>> mo2 = nongreedyHaRegex.search('HaHaHaHaHa')
+>>> mo2.group()
+'HaHaHa'
+```
+
+`?` in regex has 2 meanings
+
+- declaring a non-greedy match
+- flagging an optional group
+
+### The `findall()` Method
+
+While `search()` will return a `match` object of the *first* matched text in a searched string, `findall()` method returns strings of *every* match in the searched string.
+
+Example with `search()`
+
+```python3
+>>> phoneNumRegex = re.compile(r'\d\d\d-\d\d\d-\d\d\d\d')
+>>> mo = phoneNumRegex.search('Cell: 415-555-9999 Work: 212-555-0000')
+>>> mo.group()
+'415-555-9999'
+```
+
+Example with `findall()`
+
+```python3
+>>> phoneNumRegex = re.compile(r'\d\d\d-\d\d\d-\d\d\d\d') # has no groups
+>>> phoneNumRegex.findall('Cell: 415-555-9999 Work: 212-555-0000')
+['415-555-9999', '212-555-0000']
+```
+
+If there are groups in the regular expression, `findall()` with groups will return a list of tuples.
+Example of `findall()` with regular expression being compiled with groups in parentheses:
+
+```python3
+>>> phoneNumRegex = re.compile(r'(\d\d\d)-(\d\d\d)-(\d\d\d\d)') # has groups
+>>> phoneNumRegex.findall('Cell: 415-555-9999 Work: 212-555-0000')
+[('415', '555', '9999'), ('212', '555', '0000')]
+```
+
+### `findall()` Summary
+
+- when called on regex with no groups, `\d\d\d-\d\d\d-\d\d\d\d`, the method `findall()` returns a list of string matches `['415-555-9999', '123-444-5555']`
+- When called on a regex that has groups, `(\d\d\d)-(\d\d\d)-(\d\d\d\d)`, the method `findall()` returns a list of tuples of strings (one string for each group), such as `[('415', '555', '9999'), ('123', '444', '5555')]`
+
+### Character Classes
+
+`\d` is shorthand for the regular expression `(0|1|2|3|4|5|6|7|8|9)`. Other *shorthand character classes* include:
+
+| Shorthand character class | Represents |
+| ------------------------- | ------------------------------ |
+| \d | Any numeric digit from 0 to 9. |
+| \D | Any character that is not a numeric digit from 0 to 9. |
+| \w | Any letter, numeric digit, or the underscore character. (Think of this as matching “word” characters.) |
+| \W | Any character that is not a letter, numeric digit, or the underscore character. |
+| \s | Any space, tab, or newline character. (Think of this as matching “space” characters.) |
+| \S | Any character that is not a space, tab, or newline. |
+
+
+```python3
+>>> xmasRegex = re.compile(r'\d+\s\w+')
+>>> xmasRegex.findall('12 drummers, 11 pipers, 10 lords, 9 ladies, 8 maids, 7
+swans, 6 geese, 5 rings, 4 birds, 3 hens, 2 doves, 1 partridge')
+['12 drummers', '11 pipers', '10 lords', '9 ladies', '8 maids', '7 swans', '6
+geese', '5 rings', '4 birds', '3 hens', '2 doves', '1 partridge']
+```
+
+### Making your Own Character Classes
+
+If shorthand character classes are too broad, use `[]` to create your own character class.
+
+Example, character class `[aeiouAEIOU]` will match any vowel, both lowercase and uppercase.
+
+```python3
+>>> vowelRegex = re.compile(r'[aeiouAEIOU]')
+>>> vowelRegex.findall('RoboCop eats baby food. BABY FOOD.')
+['o', 'o', 'o', 'e', 'a', 'a', 'o', 'o', 'A', 'O', 'O']
+```
+
+Inside `[]` normal regular expression symbols are not interpreted as such. No need to escape.
+(^) after opening bracket, you make a *negative character class*, matching all characters not in the character class.
+Negative Character Class Example:
+
+```Python3
+>>> consonantRegex = re.compile(r'[^aeiouAEIOU]')
+>>> consonantRegex.findall('RoboCop eats baby food. BABY FOOD.')
+['R', 'b', 'C', 'p', ' ', 't', 's', ' ', 'b', 'b', 'y', ' ', 'f', 'd', '.', '
+', 'B', 'B', 'Y', ' ', 'F', 'D', '.']
+```
+
+### Caret and Dollar Sign Characters
+
+Use (^) at the start of a regex = "match must occur at *beginning* of searched text."
+Use ($) at the end of a regex = "match must *end* with the regex pattern."
+Using ^ and $ together requires the entire string to match - not just a subset of a string.
+
+`r'^Hello'` to begin with Hello
+
+```python3
+>>> beginsWithHello = re.compile(r'^Hello')
+>>> beginsWithHello.search('Hello, world!')
+<re.Match object; span=(0, 5), match='Hello'>
+>>> beginsWithHello.search('He said hello.') == None
+True
+```
+
+`r'\d$'` strings that end with a number 0 to 9:
+
+```python3
+>>> endsWithNumber = re.compile(r'\d$')
+>>> endsWithNumber.search('Your number is 42')
+<re.Match object; span=(16, 17), match='2'>
+>>> endsWithNumber.search('Your number is forty two.') == None
+True
+```
+
+`r'^\d+$'` matches strings that both gegin and end with 1 or more numeric characters:
+
+```python3
+>>> wholeStringIsNum = re.compile(r'^\d+$')
+>>> wholeStringIsNum.search('1234567890')
+<re.Match object; span=(0, 10), match='1234567890'>
+>>> wholeStringIsNum.search('12345xyz67890') == None
+True
+>>> wholeStringIsNum.search('12  34567890') == None
+True
+```
+
+### The Wildcard Character
+
+The `.` (or dot) character in regular expression is a *wildcard* and matched any character except for a newline.
+
+`.` Example:
+
+```python3
+>>> atRegex = re.compile(r'.at')
+>>> atRegex.findall('The cat in the hat sat on the flat mat.')
+['cat', 'hat', 'sat', 'lat', 'mat']
+```
+
+The dot will match only 1 character, so `'flat'` returns only `'lat'`.
+
+### Matching everything with a `.*`
+
+`.` = "any single character except the newline"
+`*` = "zero or more of the preceding character"
+So, together `.*` = "Every single character except the newline"
+
+```python3
+>>> nameRegex = re.compile(r'First Name: (.*) Last Name: (.*)')
+>>> mo = nameRegex.search('First Name: Al Last Name: Sweigart')
+>>> mo.group(1)
+'Al'
+>>> mo.group(2)
+'Sweigart'
+```
+
+`.*` uses *greedy* mode, it will always try to match as much text as possible. Fo *non-greedy*, use the dot, star, and question mark `.*?`
+
+Greedy vs Non-Greedy Mode `.*`
+
+```python3
+>>> nongreedyRegex = re.compile(r'<.*?>')
+>>> mo = nongreedyRegex.search('<To serve man> for dinner.>')
+>>> mo.group()
+'<To serve man>'
+
+>>> greedyRegex = re.compile(r'<.*>')
+>>> mo = greedyRegex.search('<To serve man> for dinner.>')
+>>> mo.group()
+'<To serve man> for dinner.>'
+```
+
+### Matching Newlines with the Dot Character
+
+dot-star matches everything except a newline. By passing `re.DOTALL` as 2nd argument to `re.compline(), dot character matches *all* characters including newline.
+
+```python3
+>>> noNewlineRegex = re.compile('.*')
+>>> noNewlineRegex.search('Serve the public trust.\nProtect the innocent.
+\nUphold the law.').group()
+'Serve the public trust.'
+
+
+>>> newlineRegex = re.compile('.*', re.DOTALL)
+>>> newlineRegex.search('Serve the public trust.\nProtect the innocent.
+\nUphold the law.').group()
+'Serve the public trust.\nProtect the innocent.\nUphold the law.'
+```
+
+### Review of Regex Symbols
+
+- `?` Matches zero or one of the preceding group.
+- `*` matches zero or more of the preceding group.
+- `+` Matches one or more of the preceding group.
+- `{n}` matches exactly *n* of the preceding group.
+- `{n,}` Matches *n* or more of the preceding group.
+- `{,m}` matches 0 to *m* of the preceding group.
+- `{n.m}` matches *n* to *m* of the preceding group.
+- `{n,m}?` or `*?` or `+?` performs a non-greedy match of the preceding group.
+- `^spam` means the string must begin with *spam*
+- `spam$` means the string must end with *spam*
+- The `.` matches any character, except newline characters.
+- `\d`, `\w`, and `\s` match a digit, word, or space character, respectively.
+- `\D`, `\W`, and `\S` match anything except a digit, word, or space character, respectively.
+- `[abc]` matches any charactyer between the brackets (such as *a, b* or *c*).
+- `[^abc]` matches any character that isn't between the brackets. 
+
+### Case-Insensitive Matching
+
+Regular Expressions match text exact casing you specify. T make regex case-insensitive, pass `re.IGNORECASE` or `re.I` as a second argument to `re.compile()`.
+
+```python3
+>>> robocop = re.compile(r'robocop', re.I)
+>>> robocop.search('RoboCop is part man, part machine, all cop.').group()
+'RoboCop'
+
+>>> robocop.search('ROBOCOP protects the innocent.').group()
+'ROBOCOP'
+
+>>> robocop.search('Al, why does your programming book talk about robocop so much?').group()
+'robocop'
+```
+
+### Substituting Strings with the `sub()` Method
+
+Regular Expressions can substitute new text in place of patterns matched. The `sub()` method for `Regex` objects is passed two arguments. First string to replace any matches and second string for regular expression:
+
+```python3
+>>> namesRegex = re.compile(r'Agent \w+')
+>>> namesRegex.sub('CENSORED', 'Agent Alice gave the secret documents to Agent Bob.')
+'CENSORED gave the secret documents to CENSORED.'
+```
+
+If needing to use the matched text as part of the substitution, in 1st argument type \1 \2 \3 etc to mean "Enter the text of group 1,2,3,etc in the substitution."
+
+Example, regex `Agent (\w)\w*)` passed with `r'\1*****'` as the first argument to `sub()`. The  `\1` in the string will be replaced by whatever text was matched by group 1 - that is, the `(\w)` group of the regular expression.
+
+```python3
+>>> agentNamesRegex = re.compile(r'Agent (\w)\w*')
+>>> agentNamesRegex.sub(r'\1****', 'Agent Alice told Agent Carol that Agent
+Eve knew Agent Bob was a double agent.')
+A**** told C**** that E**** knew B**** was a double agent.'
+```
+
+### Managing Complex Regexes
+
+Use `re.VERBOSE` to spread regular expressions over multiple lines with comments like:
+
+```python3
+phoneRegex = re.compile(r'((\d{3}|\(\d{3}\))?(\s|-|\.)?\d{3}(\s|-|\.)\d{4}
+(\s*(ext|x|ext.)\s*\d{2,5})?)')
+```
+
+Becomes:
+
+```python3
+phoneRegex = re.compile(r'''(
+    (\d{3}|\(\d{3}\))?            # area code
+    (\s|-|\.)?                    # separator
+    \d{3}                         # first 3 digits
+    (\s|-|\.)                     # separator
+    \d{4}                         # last 4 digits
+    (\s*(ext|x|ext.)\s*\d{2,5})?  # extension
+    )''', re.VERBOSE)
+```
+
+Use triple-quote syntax `'''` to create the multipline string and spread over many lines.
+
+### Combining `re.IGNORECASE` `re.DOTALL` and `re.VERBOSE`
+
+`re.compile()` function takes only a single value as its second argument.
+
+To get around this, use pipe `|` with both arguments within a single `re.compile()`
+
+```python
+>>> someRegexValue = re.compile('foo', re.IGNORECASE | re.DOTALL)
+>>> someRegexValue = re.compile('foo', re.IGNORECASE | re.DOTALL | re.VERBOSE)
+```
+
+### Project: Phone Number and Email Address Extractor
+
+Say there is a task to find every phone number and email address in a long web page or document. To avoid manual review, a program could allow you to copy text to a clipboard and search text in clipboard for phone numbers and email addresses. Manual work turns to CTRL-A and CTRL-C then run the program.
+
+Start a new project by considering the bigger picture and drawing high-level plan for what the program needs to do.
+
+This phone and email address extractor needs to do the following:
+
+- Get the text off the clipboard.
+- Find all phone numbers and email addresses in the text.
+- Paste them onto the clipboard
+
+Now think what the code needs to do:
+
+- Use the `pyperclip` module to copy and paste strings.
+- Create two regexes, one for matching phone numbers and the other for matching email addresses.
+- Find all matches, not just the first match, of both regexes.
+- Neatly format the matched strings into a single string to paste.
+- Display some kind of message if no matches were found in the text.
+
+Organize the objectives into Steps:
+
+### *Step 1: Create a Regex for Phone Numbers*
+
+First, create regular expression to search for phone numbers. Example python file: *phoneAndEmail.py*
+
+```python3
+#! python3
+# phoneAndEmail.py - Finds phone numbers and email addresses on the clipboard.
+
+import pyperclip, re
+
+phoneRegex = re.compile(r'''(
+    (\d{3}|\(\d{3}\))?                # area code
+    (\s|-|\.)?                        # separator
+    (\d{3})                           # first 3 digits
+    (\s|-|\.)                         # separator
+    (\d{4})                           # last 4 digits
+    (\s*(ext|x|ext.)\s*(\d{2,5}))?    # extension
+    )''', re.VERBOSE)
+
+# TODO: Create email regex.
+
+# TODO: Find matches in clipboard text.
+
+# TODO: Copy results to the clipboard.
+```
+
+### *Step 2: Create a Regex for Email Addresses*
+
+```python3
+#! python3
+# phoneAndEmail.py - Finds phone numbers and email addresses on the clipboard.
+
+import pyperclip, re
+
+phoneRegex = re.compile(r'''(
+--snip--
+
+# Create email regex.
+emailRegex = re.compile(r'''(
+  ➊ [a-zA-Z0-9._%+-]+      # username
+  ➋ @                      # @ symbol
+  ➌ [a-zA-Z0-9.-]+         # domain name
+    (\.[a-zA-Z]{2,4})       # dot-something
+    )''', re.VERBOSE)
+
+# TODO: Find matches in clipboard text.
+
+# TODO: Copy results to the clipboard.
+```
+
+### *Step 3: Find All Matches in the Clipboard Text*
+
+```python3
+ #! python3
+   # phoneAndEmail.py - Finds phone numbers and email addresses on the clipboard.
+
+   import pyperclip, re
+
+   phoneRegex = re.compile(r'''(
+   --snip--
+
+   # Find matches in clipboard text.
+   text = str(pyperclip.paste())
+
+➊ matches = []
+➋ for groups in phoneRegex.findall(text):
+       phoneNum = '-'.join([groups[1], groups[3], groups[5]])
+       if groups[8] != '':
+           phoneNum += ' x' + groups[8]
+       matches.append(phoneNum)
+➌ for groups in emailRegex.findall(text):
+       matches.append(groups[0])
+
+   # TODO: Copy results to the clipboard.
+```
+
+### *Step 4: Join the Matches into a String for the Clipboard*
+
+```python3
+#! python3
+# phoneAndEmail.py - Finds phone numbers and email addresses on the clipboard.
+
+--snip--
+for groups in emailRegex.findall(text):
+    matches.append(groups[0])
+
+# Copy results to the clipboard.
+if len(matches) > 0:
+    pyperclip.copy('\n'.join(matches))
+    print('Copied to clipboard:')
+    print('\n'.join(matches))
+else:
+    print('No phone numbers or email addresses found.')
+```
+
+---
+
+## CH8 Input Validation
+
+---
+
+*Input Validation* checks the values entered by the user.
+
+Instead of using `while` and `for` loops for validation, this chapter shows 3rd party module PyInpuPlus Module
+
+### `PyInputPlus` Module
+
+`PyInputPlus` contains functions similar to `input()` for several kinds of data: numbers, dates, email addresses, and more.
+
+**Install** `pip install --user pyinputplus`
+
+**Import** `>>> import pyinputplus`
+
+**Documentaiton** [https://pyinputplus.readthedocs.io/](https://pyinputplus.readthedocs.io/)
+
+PyInputPlus has functions for different kinds of input:
+
+- `inputStr()` Is like the built-in input() function but has the general PyInputPlus features. You can also pass a custom validation function to it
+- `inputNum()` Ensures the user enters a number and returns an int or float, depending on if the number has a decimal point in it
+- `inputChoice()` Ensures the user enters one of the provided choices
+- `inputMenu()` Is similar to inputChoice(), but provides a menu with numbered or lettered options
+- `inputDatetime()` Ensures the user enters a date and time
+- `inputYesNo()` Ensures the user enters a “yes” or “no” response
+- `inputBool()` Is similar to inputYesNo(), but takes a “True” or “False” response and returns a Boolean value
+- `inputEmail()` Ensures the user enters a valid email address
+- `inputFilepath()` Ensures the user enters a valid file path and filename, and can optionally check that a file with that name exists
+- `inputPassword()` Is like the built-in input(), but displays * characters as the user types so that passwords, or other sensitive information, aren’t displayed on the screen
+
+Functions will automatically repormpt user for as long as they enter invalid input:
+
+```python3
+>>> import pyinputplus as pyip
+>>> response = pyip.inputNum()
+five
+'five' is not a number.
+42
+>>> response
+42
+```
+
+Python's `help()` function finds out more about each of these functions. Example: `help(pyip.inputChoice)` displays help information for the `inputChoice()` function.
+
+### Keyword Arguments: min, max, greaterThan, lessThan
+
+The `inputNum()` `inputInt()` and `inputFloat()` functions accept int and float numbers, also have min,max,greaterThan, and lessThan keyword arguments for specifying a range of valid values:
+
+```python3
+>>> import pyinputplus as pyip
+>>> response = pyip.inputNum('Enter num: ', min=4)
+Enter num:3
+Input must be at minimum 4.
+Enter num:4
+>>> response
+4
+>>> response = pyip.inputNum('Enter num: ', greaterThan=4)
+Enter num: 4
+Input must be greater than 4.
+Enter num: 5
+>>> response
+5
+>>> response = pyip.inputNum('>', min=4, lessThan=6)
+Enter num: 6
+Input must be less than 6.
+Enter num: 3
+Input must be at minimum 4.
+Enter num: 4
+>>> response
+4
+```
+
+### *blank Keyword*
+
+blank input is not allowed unless blank keyword is set to `True`
+
+```python3
+>>> import pyinputplus as pyip
+>>> response = pyip.inputNum('Enter num: ')
+Enter num:(blank input entered here)
+Blank values are not allowed.
+Enter num: 42
+>>> response
+42
+>>> response = pyip.inputNum(blank=True)
+(blank input entered here)
+>>> response
+''
+```
+
+### *limit, timeout, and default Keywords*
+
+To keep invalid input from being an endless loop,
+
+`limit` and `timeout`
+
+```python3
+>>> import pyinputplus as pyip
+>>> response = pyip.inputNum(limit=2)
+blah
+'blah' is not a number.
+Enter num: number
+'number' is not a number.
+Traceback (most recent call last):
+    --snip--
+pyinputplus.RetryLimitException
+>>> response = pyip.inputNum(timeout=10)
+42 (entered after 10 seconds of waiting)
+Traceback (most recent call last):
+    --snip--
+pyinputplus.TimeoutException
+```
+
+`default` example
+
+```python3
+>>> response = pyip.inputNum(limit=2, default='N/A')
+hello
+'hello' is not a number.
+world
+'world' is not a number.
+>>> response
+'N/A'
+```
+
+### The allowRegexes and blockRegexes Keyword Arguments
+
+`allowRegexes` and `blockRegexes` keyword arguments take a list of regular expression strings to determine what the PyInputPlus function will accept or reject as valid input.
+
+```python3
+>>> import pyinputplus as pyip
+>>> response = pyip.inputNum(allowRegexes=[r'(I|V|X|L|C|D|M)+', r'zero'])
+XLII
+>>> response
+'XLII'
+>>> response = pyip.inputNum(allowRegexes=[r'(i|v|x|l|c|d|m)+', r'zero'])
+xlii
+>>> response
+'xlii'
+```
+
+```python3
+>>> import pyinputplus as pyip
+>>> response = pyip.inputNum(blockRegexes=[r'[02468]$'])
+42
+This response is invalid.
+44
+This response is invalid.
+43
+>>> response
+43
+```
+
+If both are specified, allow will override block
+
+```python3
+>>> import pyinputplus as pyip
+>>> response = pyip.inputStr(allowRegexes=[r'caterpillar', 'category'],
+blockRegexes=[r'cat'])
+cat
+This response is invalid.
+catastrophe
+This response is invalid.
+category
+>>> response
+'category'
+```
+
+For more on pyinputplus, see online documentation: [https://pyinputplus.readthedocs.io/](https://pyinputplus.readthedocs.io/)
+
+### Passing a Custom Validation Function to inputCustom()
+
+A custom input function can be written and used with pyinputplus.inputCustom(). The custom written function must:
+
+- Accept a single string argument of what the user entered
+- Raise an exception if the string fails validation
+- Return `None` (or has no `return` statement) if `inputCustom()` should return the string unchanged.
+- Return a non-`None` Value if `inputCustom()` should r4eturn a different string from the one the user entered
+- Pass the custom function as the first argument to `inputCustom()`
+
+Example for `addsUpToTen()` function:
+
+```python3
+>>> import pyinputplus as pyip
+>>> def addsUpToTen(numbers):
+...   numbersList = list(numbers)
+...   for i, digit in enumerate(numbersList):
+...     numbersList[i] = int(digit)
+...   if sum(numbersList) != 10:
+...     raise Exception('The digits must add up to 10, not %s.' %
+(sum(numbersList)))
+...   return int(numbers) # Return an int form of numbers.
+...
+>>> response = pyip.inputCustom(addsUpToTen) # No parentheses after
+addsUpToTen here.
+123
+The digits must add up to 10, not 6.
+1235
+The digits must add up to 10, not 11.
+1234
+>>> response # inputStr() returned an int, not a string.
+1234
+>>> response = pyip.inputCustom(addsUpToTen)
+hello
+invalid literal for int() with base 10: 'h'
+55
+>>> response
+```
+
+---
+
+## CH9 Reading and Writing Files
+
+---
+
+Use Python to create, read, and save files on the hard drive.
+
+### Files and File Paths
+
+| file property example | description |
+| --- | ---- |
+| C:\  | windows root folder |
+| /  | macOS and Linux root folder |
+| D:\ or E:\ | Additional volumes on Windows |
+| /Volumes folder | Additional volumes in Linux |
+| /mnt ("mount") folder | Where additional volumes appear in Linux |
+| C:\Users\AL\Documents  | file path |
+| project.docx  | file name |
+
+Windows file and folder names are not case-sensitive.
+Linux and macOS files an folder names are case-sensitive.
+
+### Backslash on Windows and Forward Slash on macOS and Linux
+
+Windows = paths use `\` as separator between folder names.
+macOS and Linux = paths use `/` as path separator.
+
+Python scripts should be written to work on both operating systems.
+
+`Path()` function in `pathlib` module. Passing string values of individual file and folder names returns a string with a file path using correct path separators.
+
+```python3
+>>> from pathlib import Path
+>>> Path('spam', 'bacon', 'eggs')
+
+WindowsPath('spam/bacon/eggs')
+>>> str(Path('spam', 'bacon', 'eggs'))
+'spam\\bacon\\eggs'
+```
+
+interactive shell on Windows will return Linux style patchs with forward slash in the interactive shell due to developers historically favoring Linux operating system.
+A returned string contained the excape character with the Windows separator `\\`
+
+On Windows backslash separates directories, so you can't use it in filenames. On macOS and Linux, you can. `Path(r'spam\eggs\')` refers to two separate folders on Windows, but the same command in macOS and Linux refers to a single folder or file named *spam\eggs*. **Always use forward slashes in your Python code.** `pathlib` module will ensure that is always works on all operating systems. 
+
+### Using the `/` Operator to Join Paths
+
+`+` operator usually adds two integers or floating-point numbers, but `+` can also be used to concatenate two strings.
+
+Similarly, `/` operator usually divides, but `/` is also used to combine `Path` objects and strings.
+
+```python3
+>>> from pathlib import Path
+>>> Path('spam') / 'bacon' / 'eggs'
+WindowsPath('spam/bacon/eggs')
+>>> Path('spam') / Path('bacon/eggs')
+WindowsPath('spam/bacon/eggs')
+>>> Path('spam') / Path('bacon', 'eggs')
+WindowsPath('spam/bacon/eggs')
+```
+
+Using `/` to join paths is safer than using string concatenation or `join()` methods such as
+
+```python3
+>>> homeFolder = r'C:\Users\Al'
+>>> subFolder = 'spam'
+>>> homeFolder + '\\' + subFolder
+'C:\\Users\\Al\\spam'
+>>> '\\'.join([homeFolder, subFolder])
+'C:\\Users\\Al\\spam'
+```
+
+The 2nd example would only work on Windows.
+The correct way to do it would be:
+
+```python3
+>>> homeFolder = Path('C:/Users/Al')
+>>> subFolder = Path('spam')
+>>> homeFolder / subFolder
+WindowsPath('C:/Users/Al/spam')
+>>> str(homeFolder / subFolder)
+'C:\\Users\\Al\\spam'
+```
+
+### Current Working Directory
+
+Any filenames or paths that do not begin with root folder are assumed to be under the *current working directory* or `cwd` 
+
+`Path.cwd()` function returns the current working directory as a string value.
+`os.chdir()` will change the current working directory.
+
+```python3
+>>> from pathlib import Path
+>>> import os
+>>> Path.cwd()
+WindowsPath('C:/Users/Al/AppData/Local/Programs/Python/Python37')'
+>>> os.chdir('C:\\Windows\\System32')
+>>> Path.cwd()
+WindowsPath('C:/Windows/System32')
+```
+
+Python will error if you try to change to a directory that does not exist.
+
+```python3
+>>> os.chdir('C:/ThisFolderDoesNotExist')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+FileNotFoundError: [WinError 2] The system cannot find the file specified:
+'C:/ThisFolderDoesNotExist'
+```
+
+`Pathlib` does not contain a function for changing working directory because it can create bugs.
+
+### The Home Directory
+
+All users have a folder for their own files called the *home directory* or *home folder*
+
+`Path` object is returned by calling `Path.home()`
+
+```python3
+>>> Path.home()
+WindowsPath('C:/Users/Al')
+```
+
+| OS | Home Directory Location |
+| -- | ----------------------- |
+| Windows | C:\Users |
+| Mac | /Users |
+| Linux | /home |
+
+Read and write permissions for users in home directories make it an ideal place to put files that programs will work with.
+
+### Absolute vs. Relative Paths
+
+2 ways to specify a file path:
+
+- *absolute path* always begins with the root folder
+- *relative path* is relative to the program's current working directory
+
+`.` folder is shorthand for "this directory"
+`..` folder is shorthand for "the parent folder"
+
+`.\` at the start of a relative path is optional. Example `.\spam.txt` and `spam.txt` refer to the same file.
+
+### Creating New Folders Using the `os.makedirs()` Function
+
+```python3
+>>> import os
+>>> os.makedirs('C:\\delicious\\walnut\\waffles')
+```
+
+`os.makedirs()` will create folders and all subfolders.
+
+Making a directory from a `Path` object, call `mkdir()` method. For example creating spam under the User Al's home folder:
+
+```python3
+>>> from pathlib import Path
+>>> Path(r'C:\Users\Al\spam').mkdir()
+```
+
+`mkdir()` can only make one directory at a time.
+
+### Handling Absolute and Relative Paths
+
+`pathlib` module provides methods for checking whether a given path is an absolute path or returning the absolute path of a relative path.
+
+`is_absolute()` returns `True` if it represents an absolute path or `False` if it represents a relative path.
+
+```python3
+>>> Path.cwd()
+WindowsPath('C:/Users/Al/AppData/Local/Programs/Python/Python37')
+>>> Path.cwd().is_absolute()
+True
+>>> Path('spam/bacon/eggs').is_absolute()
+False
+```
+
+To get an absolute path from a relative path, you can put  `Path.cwd() /` in front of the relative `Path` object. 
+
+```python3
+>>> Path('my/relative/path')
+WindowsPath('my/relative/path')
+>>> Path.cwd() / Path('my/relative/path')
+WindowsPath('C:/Users/Al/AppData/Local/Programs/Python/Python37/my/relative/
+path')
+```
+
+Getting absolute path from relative path and home directory
+
+```python3
+>>> Path('my/relative/path')
+WindowsPath('my/relative/path')
+>>> Path.home() / Path('my/relative/path')
+WindowsPath('C:/Users/Al/my/relative/path')
+```
+
+`os.path` module useful functions related to absolute and relative paths:
+
+- Calling `os.path.abspath(path)` will returns a string of the absolute path of the argument. This is an easy way to convert a relative path into an absolute one.
+- Calling `os.path.isabs(path)` will return `True` if the argument is an absolute path and `False` if it is a relative path.
+- Calling `os.path.relpath(path, start)` will return a stirng of a relative path from the `start` path to `path`. If `start` is not provided, the current working directory is used as the start path.
+
+```python3
+>>> os.path.abspath('.')
+
+'C:\\Users\\Al\\AppData\\Local\\Programs\\Python\\Python37'
+>>> os.path.abspath('.\\Scripts')
+'C:\\Users\\Al\\AppData\\Local\\Programs\\Python\\Python37\\Scripts'
+>>> os.path.isabs('.')
+False
+>>> os.path.isabs(os.path.abspath('.'))
+True
+```
+
+When relative path is within the same parent folder as the path, but is within subfolders of a different path - use "dot-dot":
+
+```python3
+>>> os.path.relpath('C:\\Windows', 'C:\\')
+'Windows'
+>>> os.path.relpath('C:\\Windows', 'C:\\spam\\eggs')
+'..\\..\\Windows'
+```
+
+### Getting the Parts of a File Path
+
+Parts of a file path include:
+
+- The *anchor*, which is the root folder of the filesystem
+- On Windows, the *drive*, is the single letter that often denotes a physical hard drive or other storage device.
+- The *parent* is the folder that contains the file
+- The *name* of the file, made up of the *stem* (or *base name*) and the *suffix* (or *extension*)
+
+```python3
+>>> p = Path('C:/Users/Al/spam.txt')
+>>> p.anchor
+'C:\\'
+>>> p.parent # This is a Path object, not a string.
+WindowsPath('C:/Users/Al')
+>>> p.name
+'spam.txt'
+>>> p.stem
+'spam'
+>>> p.suffix
+'.txt'
+>>> p.drive
+'C:'
+```
+
+All return strings, except `parent`, which returns another `Path` object.
+`parents` (plural) evaluates to an ancestor folder of the `Path` object:
+
+```python3
+>>> Path.cwd()
+WindowsPath('C:/Users/Al/AppData/Local/Programs/Python/Python37')
+>>> Path.cwd().parents[0]
+WindowsPath('C:/Users/Al/AppData/Local/Programs/Python')
+>>> Path.cwd().parents[1]
+WindowsPath('C:/Users/Al/AppData/Local/Programs')
+>>> Path.cwd().parents[2]
+WindowsPath('C:/Users/Al/AppData/Local')
+>>> Path.cwd().parents[3]
+WindowsPath('C:/Users/Al/AppData')
+>>> Path.cwd().parents[4]
+WindowsPath('C:/Users/Al')
+>>> Path.cwd().parents[5]
+WindowsPath('C:/Users')
+>>> Path.cwd().parents[6]
+WindowsPath('C:/')
+```
+
+`os.path.basename()` example:
+
+```python3
+>>> calcFilePath = 'C:\\Windows\\System32\\calc.exe'
+>>> os.path.basename(calcFilePath)
+'calc.exe'
+>>> os.path.dirname(calcFilePath)
+'C:\\Windows\\System32'
+```
+
+`os.path.split()` returns a tuple of 2 strings:
+
+```python3
+>>> calcFilePath = 'C:\\Windows\\System32\\calc.exe'
+>>> os.path.split(calcFilePath)
+('C:\\Windows\\System32', 'calc.exe')
+```
+
+Same tuple can be created using `os.path.dirname()` and `os.path.basename()`
+
+```python3
+>>> (os.path.dirname(calcFilePath), os.path.basename(calcFilePath))
+('C:\\Windows\\System32', 'calc.exe')
+```
+
+`os.sep` returns a list of individual folders:
+
+```python3
+>>> calcFilePath.split(os.sep)
+['C:', 'Windows', 'System32', 'calc.exe']
+```
+
+### Finding File Sizes and Folder Contents
+
+`os.path` module provides functions for finding size of file in bytes, and the file and folders inside a given folder
+
+- `os.path.getsize(path)` returns size in bytes of the file in the `path` argument.
+- `os.listdir(path)` returns list of filename strings for each file in the `path` argument.
+
+```python3
+>>> os.path.getsize('C:\\Windows\\System32\\calc.exe')
+27648
+>>> os.listdir('C:\\Windows\\System32')
+['0409', '12520437.cpx', '12520850.cpx', '5U877.ax', 'aaclient.dll',
+--snip--
+'xwtpdui.dll', 'xwtpw32.dll', 'zh-CN', 'zh-HK', 'zh-TW', 'zipfldr.dll']
+```
+
+To total size of all files in a directory:
+
+```python3
+>>> totalSize = 0
+>>> for filename in os.listdir('C:\\Windows\\System32'):
+      totalSize = totalSize + os.path.getsize(os.path.join('C:\\Windows\\System32', filename))
+>>> print(totalSize)
+2559970473
+```
+
+### Modifying a List of Files Using Glob Patterns
+
+`glob()` method is simpler to use than `listdir()`. Glob patterns are like a simplified form of regular expressions often used in command line commands. `glob()` returns a generator object that you need to pass to `list()` to easily view in the interactive shell.
+
+```python3
+>>> p = Path('C:/Users/Al/Desktop')
+>>> p.glob('*')
+<generator object Path.glob at 0x000002A6E389DED0>
+>>> list(p.glob('*')) # Make a list from the generator.
+[WindowsPath('C:/Users/Al/Desktop/1.png'), WindowsPath('C:/Users/Al/
+Desktop/22-ap.pdf'), WindowsPath('C:/Users/Al/Desktop/cat.jpg'),
+  --snip--
+WindowsPath('C:/Users/Al/Desktop/zzz.txt')]
+```
+
+`*` stands for "multiple of any characters" so `p.glob('*')` returns a generator of all files inthe path stored in `p`.
+
+To list all text files:
+
+```python3
+>>> list(p.glob('*.txt') # Lists all text files.
+[WindowsPath('C:/Users/Al/Desktop/foo.txt'),
+  --snip--
+WindowsPath('C:/Users/Al/Desktop/zzz.txt')]
+```
+
+`?` stands for "any single character"
+
+```python3
+>>> list(p.glob('project?.docx')
+[WindowsPath('C:/Users/Al/Desktop/project1.docx'), WindowsPath('C:/Users/Al/
+Desktop/project2.docx'),
+  --snip--
+WindowsPath('C:/Users/Al/Desktop/project9.docx')]
+```
+
+Combining characters in `glob()` such as `*.?x?`
+
+```python3
+>>> list(p.glob('*.?x?')
+[WindowsPath('C:/Users/Al/Desktop/calc.exe'), WindowsPath('C:/Users/Al/
+Desktop/foo.txt'),
+  --snip--
+WindowsPath('C:/Users/Al/Desktop/zzz.txt')]
+```
+
+The glob expression '*.?x?' will return files with any name and any three-character extension where the middle character is an 'x'.
+
+`for` loops can iterate over the generator that `glob()` returns:
+
+```python3
+>>> p = Path('C:/Users/Al/Desktop')
+>>> for textFilePathObj in p.glob('*.txt'):
+...     print(textFilePathObj) # Prints the Path object as a string.
+...     # Do something with the text file.
+...
+C:\Users\Al\Desktop\foo.txt
+C:\Users\Al\Desktop\spam.txt
+C:\Users\Al\Desktop\zzz.txt
+```
+
+To perform an operation on every file in a directory, use `os.listdir(p)` or `p.glob('*')`.
+
+### Checking Path Validity
+
+Assume `p` holds a `Path` object:
+
+- `p.exists()` returns `True` if the path exists or returns `False` if not.
+- `p.is_file()` returns `True` if exists and is a file, returns `False` otherwise.
+- `p.is_dir()` returns `True` if path exists nd is a directory, or returns `False` otherwise.
+
+```python3
+>>> winDir = Path('C:/Windows')
+>>> notExistsDir = Path('C:/This/Folder/Does/Not/Exist')
+>>> calcFile = Path('C:/Windows
+/System32/calc.exe')
+>>> winDir.exists()
+True
+>>> winDir.is_dir()
+True
+>>> notExistsDir.exists()
+False
+>>> calcFile.is_file()
+True
+>>> calcFile.is_dir()
+False
+```
+
+### The File Reading/Writing Process
+
+`pathlib` module's `read_text()` returns a string of the full contents of a text file.
+`write_text()` creates a new text file (or overwrites and existing one) with the string passed to it.
+
+```python3
+>>> from pathlib import Path
+>>> p = Path('spam.txt')
+>>> p.write_text('Hello, world!')
+13
+>>> p.read_text()
+'Hello, world!'
+```
+
+`Path` only provides basic interactions with files. More common way of writing to a file uses `open()` function and file objects.
+
+### Opening Files with the `open()` function
+
+`open()` function opens a file of the relative or absolute path passed to it. Returns a `File` object.
+
+```python3
+>>> helloFile = open(Path.home() / 'hello.txt')
+```
+
+`open()` will accept strings.
+On Windows:
+
+```python3
+>>> helloFile = open('C:\\Users\\your_home_folder\\hello.txt')
+```
+
+On macOS
+
+```python3
+>>> helloFile = open('/Users/your_home_folder/hello.txt')
+```
+
+Python default is to open the file in 'r' read mode.
+So open('/Users/Al/hello.txt', 'r') and open('/Users/Al/hello.txt') do the same thing.
+
+### Reading the Contents of Files
+
+Using `File` object's `read()` method will read entire contents:
+
+```python3
+>>> helloContent = helloFile.read()
+>>> helloContent
+'Hello, world!'
+```
+
+`readlines()` returns a *list* of string values from the file, one string for each line.
+
+```python3
+>>> sonnetFile = open(Path.home() / 'sonnet29.txt')
+>>> sonnetFile.readlines()
+[When, in disgrace with fortune and men's eyes,\n', ' I all alone beweep my
+outcast state,\n', And trouble deaf heaven with my bootless cries,\n', And
+look upon myself and curse my fate,']
+```
+
+Notice the last line does not end with a newline character `\n`.
+
+### Writing to Files
+
+Writing requires files to be opened in "write plaintext" `'w'` or "append plaintext" `'a'` mode. Pass mode as 2nd argument to `open()`
+
+```python3
+>>> baconFile = open('bacon.txt', 'w')   
+>>> baconFile.write('Hello, world!\n')
+13
+>>> baconFile.close()
+>>> baconFile = open('bacon.txt', 'a')
+>>> baconFile.write('Bacon is not a vegetable.')
+25
+>>> baconFile.close()
+>>> baconFile = open('bacon.txt')
+>>> content = baconFile.read()
+>>> baconFile.close()
+>>> print(content)
+Hello, world!
+Bacon is not a vegetable.
+```
+
+### Saving Variables with the Shelve Module
+
+`shelve` module allows variables saved to binary shelf files so program can restore data to variables from the hard drive. The `shelve` module lets you add Save and Open features to a program.
+
+```python3
+>>> import shelve
+>>> shelfFile = shelve.open('mydata')
+>>> cats = ['Zophie', 'Pooka', 'Simon']
+>>> shelfFile['cats'] = cats
+>>> shelfFile.close()
+```
+
+After running the previous code on Windows, you will see three new files in the current working directory: mydata.bak, mydata.dat, and mydata.dir. On macOS, only a single mydata.db file will be created.
+
+`shelve` module is used to later reopen and retrieve data from shelf files. Read/write modes don't apply.
+
+```python3
+>>> shelfFile = shelve.open('mydata')
+>>> type(shelfFile)
+<class 'shelve.DbfilenameShelf'>
+>>> shelfFile['cats']
+['Zophie', 'Pooka', 'Simon']
+>>> shelfFile.close()
+```
+
+Shelf files are like dictionaries, they have `keys()` and `values()`.
+
+```python3
+>>> shelfFile = shelve.open('mydata')
+>>> list(shelfFile.keys())
+['cats']
+>>> list(shelfFile.values())
+[['Zophie', 'Pooka', 'Simon']]
+>>> shelfFile.close()
+```
+
+Plaintext is useful for creating files that you’ll read in a text editor such as Notepad or TextEdit, but if you want to save data from your Python programs, use the shelve module.
+
+### Saving Variables with the `pprint.pformat()` Function
+
+`pprint.pformat()` function will return a string formatted and syntactically correct Python code. Dictionaries can be stored in a variable and stored in a .py file for future use after a shell is closed.
+
+```python3
+>>> import pprint
+>>> cats = [{'name': 'Zophie', 'desc': 'chubby'}, {'name': 'Pooka', 'desc': 'fluffy'}]
+>>> pprint.pformat(cats)
+"[{'desc': 'chubby', 'name': 'Zophie'}, {'desc': 'fluffy', 'name': 'Pooka'}]"
+>>> fileObj = open('myCats.py', 'w')
+>>> fileObj.write('cats = ' + pprint.pformat(cats) + '\n')
+83
+>>> fileObj.close()
+```
+
+The list named `cats` was saved to a python file `myCats.py`. This file can be imported.
+
+```python3
+>>> import myCats
+>>> myCats.cats
+[{'name': 'Zophie', 'desc': 'chubby'}, {'name': 'Pooka', 'desc': 'fluffy'}]
+>>> myCats.cats[0]
+{'name': 'Zophie', 'desc': 'chubby'}
+>>> myCats.cats[0]['name']
+'Zophie'
+```
+
+The benefit of creating a .py file (as opposed to saving variables with the shelve module) is that because it is a text file, the contents of the file can be read and modified by anyone with a simple text editor. For most applications, however, saving data using the shelve module is the preferred way to save variables to a file. Only basic data types such as integers, floats, strings, lists, and dictionaries can be written to a file as simple text. File objects, for example, cannot be encoded as text.
+
+---
+
+## CH10 Organizing Files
+
+---
+
+copying, renaming, moving, or compressing files
+
+### The Shutil Module
+
+`shutil` or shell utilities module has functions to copy, move, rename, and delete files in Python programs.
+
+`import shutil` to use the functions
+
+### Copying Files and Folders
+
+`shutil.copy(source, destination)` will copy the file at the path `source` to the folder at the path `destination`. IF `destination` is a filename, it will be used as the new name of the copied file. Returns a string or `Path` object of the copied file.
+
+Example `shutil.copy()`:
+
+```python3
+>>> import shutil, os
+>>> from pathlib import Path
+>>> p = Path.home()
+>>> shutil.copy(p / 'spam.txt', p / 'some_folder')
+ 'C:\\Users\\Al\\some_folder\\spam.txt'
+>>> shutil.copy(p / 'eggs.txt', p / 'some_folder/eggs2.txt')
+ WindowsPath('C:/Users/Al/some_folder/eggs2.txt')
+ ```
+
+ `shutil.copytree()` copies an entire folder and every folder and file contained in it.
+
+ ```python3
+ >>> import shutil, os
+>>> from pathlib import Path
+>>> p = Path.home()
+>>> shutil.copytree(p / 'spam', p / 'spam_backup')
+WindowsPath('C:/Users/Al/spam_backup')
+```
+
+### Moving and Renaming Files and Folders
+
+`shutil.move(source, destination)` moves the file or folder at the path `source` to path `destination`. Returns string of the absolute path of the new location. If `destination` is a folder, filename stays the same. If filename exists in the destination, it is overwritten.
+
+```python3
+>>> import shutil
+>>> shutil.move('C:\\bacon.txt', 'C:\\eggs')
+'C:\\eggs\\bacon.txt'
+```
+
+If there was no destination folder named `eggs`, then it would create a text file (without .txt extension) and save the file there.
+
+```python3
+>>> shutil.move('C:\\bacon.txt', 'C:\\eggs')
+'C:\\eggs'
+```
+
+If a partent folder does not exist Python will throw an exception:
+
+```python3
+>>> shutil.move('spam.txt', 'c:\\does_not_exist\\eggs\\ham')
+Traceback (most recent call last):
+  --snip--
+FileNotFoundError: [Errno 2] No such file or directory: 'c:\\does_not_exist\\
+eggs\\ham'
+```
+
+### Permanently Deleting Files and Folders
+
+`os` module can delete single file or single empty folder.
+`shutil` mudle can delete a folder and all of its contents.
+
+- `os.unlink(path)` will delete the file at `path`.
+- `os.rmdir(path)` will delete the folder at `path`. Folder must be empty of and files or folders.
+- `shutil.rmtree(path)` will remove the folder at `path`, and all the files and folders it contains will also be deleted.
+
+It is safer to first run a program with printing the filenames to delete prior to deleting:
+
+```python3
+import os
+from pathlib import Path
+for filename in Path.home().glob('*.rxt'):
+    #os.unlink(filename)
+    print(filename)
+```
+
+### Safe Deletes with the send2trash Module
+
+Install: `pip install --user send2trash`
+
+```python3
+>>> import send2trash
+>>> baconFile = open('bacon.txt', 'a')   # creates the file
+>>> baconFile.write('Bacon is not a vegetable.')
+25
+>>> baconFile.close()
+>>> send2trash.send2trash('bacon.txt')
+```
+
+In general, always use the `send2trash.send2trash()` function to delete files and folders.
+
+send2trash:
+
+- will not free up disk space like permanently deleting
+- can only send files to the recycle bin; it cannot pull files out
+
+### Walking a Directory Tree
+
+walk through the directory tree, touching each file for every file in the folder and every file in the every subfolder.
+
+`os.walk()` function is passed a single string value: path of a folder. Use is a for loop statement is like the use of `range()` function to talk over a range of numbers. `os.walk()` returns 3 values on each iteration:
+
+- A string of the current folder's name
+- A list of strings of the folders in the current folder
+- A list of strings of the files in the current folder
+
+Current folder means the folder for the current iteration of the `for` loop.
+
+```python3
+import os
+
+for folderName, subfolders, filenames in os.walk('C:\\delicious'):
+    print('The current folder is ' + folderName)
+
+    for subfolder in subfolders:
+        print('SUBFOLDER OF ' + folderName + ': ' + subfolder)
+
+    for filename in filenames:
+        print('FILE INSIDE ' + folderName + ': '+ filename)
+
+    print('')
+```
+
+Output:
+
+```text
+The current folder is C:\delicious
+SUBFOLDER OF C:\delicious: cats 
+SUBFOLDER OF C:\delicious: walnut
+FILE INSIDE C:\delicious: spam.txt
+
+The current folder is C:\delicious\cats
+FILE INSIDE C:\delicious\cats: catnames.txt
+FILE INSIDE C:\delicious\cats: zophie.jpg
+
+The current folder is C:\delicious\walnut
+SUBFOLDER OF C:\delicious\walnut: waffles
+
+The current folder is C:\delicious\walnut\waffles
+FILE INSIDE C:\delicious\walnut\waffles: butter.txt.
+```
+
+### Compressing Files with the `zipfile` Module
+
+`ZipFile` objects are similar to `File` objects.
+
+`zipfile.ZipFile()` creates a ZipFile object.
+
+`zipfile` = the python module. `ZipFile()` = name of the function.
+
+```python3
+   >>> import zipfile, os
+
+   >>> from pathlib import Path
+   >>> p = Path.home()
+   >>> exampleZip = zipfile.ZipFile(p / 'example.zip')
+   >>> exampleZip.namelist()
+   ['spam.txt', 'cats/', 'cats/catnames.txt', 'cats/zophie.jpg']
+   >>> spamInfo = exampleZip.getinfo('spam.txt')
+   >>> spamInfo.file_size
+   13908
+   >>> spamInfo.compress_size
+   3828
+➊ >>> f'Compressed file is {round(spamInfo.file_size / spamInfo
+   .compress_size, 2)}x smaller!'
+   )
+   'Compressed file is 3.63x smaller!'
+   >>> exampleZip.close()
+```
+
+A ZipFile object has a namelist() method that returns a list of strings for all the files and folders contained in the ZIP file. These strings can be passed to the getinfo() ZipFile method to return a ZipInfo object about that particular file. ZipInfo objects have their own attributes, such as file_size and compress_size in bytes, which hold integers of the original file size and compressed file size, respectively. While a ZipFile object represents an entire archive file, a ZipInfo object holds useful information about a single file in the archive.
+
+### Extracting from ZIP Files
+
+`extractall()` method for `ZipFile` objects extracts all the files and folders from a ZIP file into the curernt working directory.
+
+```python3
+   >>> import zipfile, os
+   >>> from pathlib import Path
+   >>> p = Path.home()
+   >>> exampleZip = zipfile.ZipFile(p / 'example.zip')
+➊ >>> exampleZip.extractall()
+   >>> exampleZip.close()
+```
+
+After run, contents of *example.zip* will be extracted to C:\. An optional foldername can be passed to `extractall()`.
+
+```python3
+>>> exampleZip.extract('spam.txt')
+'C:\\spam.txt'
+>>> exampleZip.extract('spam.txt', 'C:\\some\\new\\folders')
+'C:\\some\\new\\folders\\spam.txt'
+>>> exampleZip.close()
+```
+
+### Creating and Adding to ZIP Files
+
