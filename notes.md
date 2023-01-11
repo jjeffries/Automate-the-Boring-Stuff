@@ -15,6 +15,7 @@ Automate the boring stuff teaches you to use Python to write programs that do in
 - Book Link: [Automate The Boring Stuff](https://automatetheboringstuff.com/#toc)
 - Notes: [Markdown Guide](https://daringfireball.net/projects/markdown/)
 - Markdown: [Cheatsheet](https://www.markdownguide.org/cheat-sheet/)
+- Python Style Guide: [Python Style Guide](https://peps.python.org/pep-0008/)
 - VisualStudioCode
 - Scripts Directory on my MAC
 - mu text editor
